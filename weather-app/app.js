@@ -1,6 +1,35 @@
-const request=require('postman-request')
-const url="http://api.weatherstack.com/current?access_key=ca1f9bf0ff77cbf2f9ed256b93cddeb9&%20query=New%20York"
-request({url,json:true},(error,response)=>{
-console.log("It is currently",response.body.current.temperature,'degree out.There is a ')
+const geocode = require("./utils/geocode");
+const forecast = require("./utils/forecast");
+const yargs=require('yargs')
+yargs.command({
+  command: "get",
+  description: "Get temperature",
+  builder: {
+    location: {
+      describe: "Location",
+      demandOption: true,
+      type: "string",
+    },
+  },
+  handler(argv) {
+    getTemperature(argv.locatiopn);
+  },
+});
 
-})
+const getTemperature=(location)=>{
+  geocode(location, (error, {location}={}) => {
+    if (error) {
+      return console.log(error);
+    }
+    forecast(location, (error, data) => {
+      console.log({ error });
+      if (error) {
+        return console.log(error);
+      }
+      console.log({ data });
+    });
+  });
+}
+
+yargs.parse();
+

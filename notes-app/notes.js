@@ -3,7 +3,7 @@ const chalk = require("chalk");
 const getNotes = (title) => {
   const notes = loadNotes();
   const duplicateNote = notes.find((note) => note.title == title);
-
+  debugger
   if (duplicateNote) {
     console.log(chalk.green.inverse(duplicateNote.title));
     console.log(duplicateNote.body);
